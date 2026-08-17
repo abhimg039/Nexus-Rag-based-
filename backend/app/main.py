@@ -1,20 +1,17 @@
 from fastapi import FastAPI
+from app.api.health import router as health_router
+from app.core.config import settings
 
 app = FastAPI(
-    title="AI Document Intelligence & RAG Platform",
-    version="1.0.0"
+    title=settings.app_name,
+    version=settings.app_version
 )
+
+app.include_router(health_router)
 
 
 @app.get("/")
 def root():
     return {
         "message": "AI Document Intelligence API is running"
-    }
-
-
-@app.get("/health")
-def health():
-    return {
-        "status": "healthy"
     }
