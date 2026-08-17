@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import DateTime, ForeignKey, Integer, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.database import Base
 
@@ -39,4 +39,8 @@ class DocumentChunk(Base):
         DateTime,
         default=datetime.utcnow,
         nullable=False
+    )
+    document: Mapped["Document"] = relationship(
+        "Document",
+        back_populates="chunks"
     )

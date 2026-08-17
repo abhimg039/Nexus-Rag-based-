@@ -52,3 +52,7 @@ class Document(Base):
         "User",
         back_populates="documents"
     )
+    chunks: Mapped[list["DocumentChunk"]] = relationship(
+        "DocumentChunk",
+        back_populates="document"
+    )
