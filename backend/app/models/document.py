@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import DateTime, ForeignKey, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.database import Base
 
@@ -47,4 +47,8 @@ class Document(Base):
         default=datetime.utcnow,
         onupdate=datetime.utcnow,
         nullable=False
+    )   
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="documents"
     )
