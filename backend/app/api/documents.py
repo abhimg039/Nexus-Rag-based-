@@ -43,3 +43,27 @@ def create_document(
         "file_path": document.file_path,
         "status": document.status
     }
+
+
+@router.get("")
+def list_documents(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    documents = (
+        db.query(Document)
+        .filter(Document.user_id == user_id)
+        .order_by(Document.created_at.desc())
+        .all()
+    )
+
+    return [
+        {
+            "id": document.id,
+            "user_id": document.user_id,
+            "filename": document.filename,
+            "file_path": document.file_path,
+            "status": document.status
+        }
+        for document in documents
+    ]
