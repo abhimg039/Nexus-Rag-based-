@@ -1,13 +1,46 @@
 # Python
 __pycache__/
 *.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
 
 # Virtual environment
 venv/
 .venv/
+env/
 
 # Environment variables
 .env
+.env.local
+
+# User-uploaded documents — NEVER commit these.
+# They are private files (resumes, reports, scans) and can contain personal data.
+backend/uploads/
+data/
+
+# Local scratch PDFs used for manual testing. Nothing in the test suite reads
+# this directory, so it is local-only by default — keeping it out of git means
+# `git add -A` can never sweep a personal document in by accident.
+backend/test_data/
+
+# Model / HuggingFace caches
+.cache/
+models/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editors
+.vscode/
+.idea/
 
 # macOS
 .DS_Store

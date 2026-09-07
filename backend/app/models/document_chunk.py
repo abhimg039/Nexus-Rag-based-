@@ -2,9 +2,11 @@ from datetime import datetime
 from typing import Optional
 
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import DateTime, ForeignKey, Integer, Text
+from sqlalchemy import DateTime, ForeignKey, Index, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.clock import utcnow
+from app.core.config import settings
 from app.db.database import Base
 
 
@@ -27,6 +29,8 @@ class DocumentChunk(Base):
         nullable=False
     )
 
+    # Sequential across the whole document (not restarted per page), so it is a
+    # stable identifier for a passage and can be used for ordering.
     chunk_index: Mapped[int] = mapped_column(
         Integer,
         nullable=False
@@ -38,17 +42,23 @@ class DocumentChunk(Base):
     )
 
     embedding: Mapped[Optional[list[float]]] = mapped_column(
-        Vector(384),
+        Vector(settings.embedding_dimensions),
         nullable=True
     )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
-        default=datetime.utcnow,
+        default=utcnow,
         nullable=False
     )
 
     document: Mapped["Document"] = relationship(
         "Document",
         back_populates="chunks"
+    )
+
+    __table_args__ = (
+        # Supports the per-document ordered reads done during ingestion and
+        # when rebuilding context.
+        Index("ix_document_chunks_document_id_chunk_index", "document_id", "chunk_index"),
     )
